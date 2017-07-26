@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
+    <meta name="viewport" content="width=device-width">
+    <title>HTML代码转换为JavaScript字符串</title>
+    <script src="./jquery.js"></script>
+
+<style>
+.sitetip {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 12px;
+}
+.subbtn .btn {
+    border: none;
+    background: #FF6100;
+    color: #fff;
+    padding: 5px 20px;
+    cursor: pointer;
+}
+label{
+    font-size: 12px;
+}
+.tarea{
+	width: 99%;
+    height: 220px;
+    border: #e6e6e6 1px solid;
+    border-color: #ddd #e6e6e6 #e6e6e6 #ddd;
+    margin-bottom: 12px;
+    box-shadow: inset 1px 1px 1px #eee;
+    padding: 4px;
+    font-size: 12px;
+    line-height: 18px;
+    border-radius: 2px;
+}
+</style></head>
+
+<body>
+
+
+
+<div class="conter marauto">
+    <div class="pagewrapper">
+        <div class="page-tools">
+		<h2 class="sitetip">贴入要转换的HTML代码：</h2>
+            <textarea onmouseover="this.focus();this.select();" class="tarea" id="content" style="float:none"></textarea>
+
+            <div class="subbtn">
+                <input type="button" onclick="javascript1();" value="转为单引号" class="btn">
+                <input type="button" onclick="javascript();" value="转为双引号" class="btn">
+                <label for="arrays-sel"><input type="checkbox" checked="checked" id="arrays-sel"> 数组拼接</label>
+            </div>
+            <h2 class="sitetip">转换结果：</h2>
+            <textarea onmouseover="this.focus();this.select();" class="tarea" id="result"></textarea>
+        </div>
+
+		<span>鼠标滑过就会选中代码，直接ctrl+x拿走</span>
+    </div>
+</div>
+<script type="text/javascript">
+    function javascript() {
+        var isArraySel = $("#arrays-sel").prop("checked");
+        var htmlArr = $("#content").val().replace(/\\/g, "\\\\").replace(/\\/g, "\\/").replace(/\'/g, "\\\'").replace(/\"/g, "\\\"").split('\n');
+        var len = htmlArr.length;
+        var outArr = [];
+        if (isArraySel) {
+            outArr.push("[");
+            jQuery.each(htmlArr, function (index, value) {
+                if (value !== "") {
+                    if (index === len - 1) {
+                        outArr.push("\"" + value + "\"");
+                    } else {
+                        outArr.push("\"" + value + "\",\n");
+                    }
+                }
+
+            });
+            outArr.push("].join(\"\");");
+        } else {
+            jQuery.each(htmlArr, function (index, value) {
+                if (value !== "") {
+                    if (index === len - 1) {
+                        outArr.push("\"" + value + "\";");
+                    } else {
+                        outArr.push("\"" + value + "\"+\n");
+                    }
+                }
+            });
+        }
+        $("#result").val(outArr.join(""));
+    }
+    function javascript1() {
+        var isArraySel = $("#arrays-sel").prop("checked");
+        var htmlArr = $("#content").val().replace(/\\/g, "\\\\").replace(/\\/g, "\\/").replace(/\'/g, "\\\'").split('\n');
+        var len = htmlArr.length;
+        var outArr = [];
+        if (isArraySel) {
+            outArr.push("[");
+            jQuery.each(htmlArr, function (index, value) {
+                if (value !== "") {
+                    if (index === len - 1) {
+                        outArr.push("\'" + value + "\'");
+                    } else {
+                        outArr.push("\'" + value + "\',\n");
+                    }
+                }
+
+            });
+            outArr.push("].join(\"\");");
+        } else {
+            jQuery.each(htmlArr, function (index, value) {
+                if (value !== "") {
+                    if (index === len - 1) {
+                        outArr.push("\'" + value + "\';");
+                    } else {
+                        outArr.push("\'" + value + "\'+\n");
+                    }
+                }
+            });
+        }
+
+
+        $("#result").val(outArr.join(""));
+
+    }
+</script>
+</body></html>
